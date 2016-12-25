@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{% block title %}{% endblock %}</title>
+		<style>
+			@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
+			@import "/css/main.css";
+			{% block styles %}{% endblock %}
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+
+	<body>
+		<div class="container-fluid">
+			{% include '/parts/_nav.html.twig' %}
+		</div>
+		{% block body %}{% endblock %}
+		{% block scripts %}{% endblock %}
+	</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends '_base.html.twig' %}
+
+{% block body %}
+	<div class="container">
+		<div class="col-md-4">
+			<div class="panel panel-primary">
+				<div class="panel-heading">Instructions</div>
+				<div class="panel-body">
+					<form action="#" method="post">
+
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-4">
+			<div class="panel panel-primary">
+				<div class="panel-heading">Sign Up Form</div>
+				<div class="panel-body">
+					<form action="#" method="post">
+						<div class="form-group">
+							<label for="username">Username</label>
+							<input class="form-control" type="text" name="username" id="username" placeholder="Username">
+						</div>
+
+						<div class="form-group">
+							<label for="username">Email Address</label>
+							<input class="form-control" type="email" name="email" id="email" placeholder="example@email.com">
+						</div>
+
+						<div class="form-group">
+							<label for="pass">Password</label>
+							<input class="form-control" type="password" name="pass" id="pass" placeholder="Password">
+						</div>
+
+						<div class="form-group">
+							<label for="pass_conf">Confirm Password</label>
+							<input class="form-control" type="password" name="pass_conf" id="pass_conf" placeholder="Confirm Password">
+						</div>
+
+						<div class="form-group">
+							<input class="btn btn-default col-xs-12" type="submit" value="Sign Up">
+						</div>
+						
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
