@@ -1,5 +1,15 @@
 {% extends '_base.html.twig' %}
 
+{% if errorcode is defined %}
+	{% if errorcode == 1 %}
+		{% set class_username = 'form-group has-error' %}
+	{% elseif errorcode == 2 %}
+		{% set class_email = 'form-group has-error' %}
+	{% elseif errorcode == 3 %}
+		{% set class_pass = 'form-group has-error' %}
+	{% endif %}
+{% endif %}
+
 {% block body %}
 	<div class="container">
 		<div class="col-md-4">
@@ -12,30 +22,62 @@
 				</div>
 			</div>
 		</div>
-		
-		<div class="col-md-4">
+		<div class="col-md-5">
 			<div class="panel panel-primary">
 				<div class="panel-heading">Sign Up Form</div>
 				<div class="panel-body">
+
+					{% if error is defined %}
+						<div class="alert alert-danger"> <i class="glyphicon glyphicon-remove"></i> {{ error }} </div>
+					{% endif %}
+
 					<form action="#" method="post">
-						<div class="form-group">
-							<label for="username">Username</label>
-							<input class="form-control" type="text" name="username" id="username" placeholder="Username">
+						<div class="{{ class_username|default('form-group')}}" >
+							<label class="control-label" for="username">Username</label>
+							<input 
+								class="form-control" 
+								type="text" 
+								name="username" 
+								id="username" 
+								placeholder="Username" 
+								value={{ username|default('') }}
+							>
 						</div>
 
-						<div class="form-group">
-							<label for="username">Email Address</label>
-							<input class="form-control" type="email" name="email" id="email" placeholder="example@email.com">
+						<div class="{{ class_email|default('form-group')}}" >
+							<label class="control-label" for="username">Email Address</label>
+							<input 
+								class="form-control" 
+								type="email" 
+								name="email" 
+								id="email" 
+								placeholder="example@email.com"
+								value={{ email|default('') }}
+							>
 						</div>
 
-						<div class="form-group">
-							<label for="pass">Password</label>
-							<input class="form-control" type="password" name="pass" id="pass" placeholder="Password">
+						<div class="{{ class_pass|default('form-group')}}" >
+							<label class="control-label" for="pass">Password</label>
+							<input 
+								class="form-control" 
+								type="password" 
+								name="pass" 
+								id="pass" 
+								placeholder="Password"
+								value={{ password|default('') }}
+							>
 						</div>
 
-						<div class="form-group">
-							<label for="pass_conf">Confirm Password</label>
-							<input class="form-control" type="password" name="pass_conf" id="pass_conf" placeholder="Confirm Password">
+						<div class="{{ class_pass|default('form-group')}}" >
+							<label class="control-label" for="pass_conf">Confirm Password</label>
+							<input 
+								class="form-control" 
+								type="password" 
+								name="pass_conf" 
+								id="pass_conf" 
+								placeholder="Confirm Password"
+								value={{ password2|default('') }}
+							>
 						</div>
 
 						<div class="form-group">

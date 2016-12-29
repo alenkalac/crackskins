@@ -28,11 +28,11 @@ class __TwigTemplate_084cd37faa08fa3d5916247e0a915089a16123b9c087409df254e06375d
     public function block_body($context, array $blocks = array())
     {
         // line 4
-        echo "\t<div class=\"container\">
-\t\t<div class=\"panel panel-default\">
-\t\t  <div class=\"panel-body\">
-\t\t    Under Constrcution
-\t\t  </div>
+        echo "\t<div class=\"container-fluid\">
+\t\t<div class=\"index-landing\">
+\t\t\t<div class=\"message-container animated zoomIn\">
+\t\t\t\tNOW SUPPORTS V1.7.10
+\t\t\t</div>
 \t\t</div>
 \t</div>
 ";
@@ -66,11 +66,11 @@ class __TwigTemplate_084cd37faa08fa3d5916247e0a915089a16123b9c087409df254e06375d
         return new Twig_Source("{% extends '_base.html.twig' %}
 
 {% block body %}
-\t<div class=\"container\">
-\t\t<div class=\"panel panel-default\">
-\t\t  <div class=\"panel-body\">
-\t\t    Under Constrcution
-\t\t  </div>
+\t<div class=\"container-fluid\">
+\t\t<div class=\"index-landing\">
+\t\t\t<div class=\"message-container animated zoomIn\">
+\t\t\t\tNOW SUPPORTS V1.7.10
+\t\t\t</div>
 \t\t</div>
 \t</div>
 {% endblock %}", "index.html.twig", "C:\\Users\\Alen Kalac\\Desktop 1\\ServerTest\\templates\\index.html.twig");

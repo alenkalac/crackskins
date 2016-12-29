@@ -1,5 +1,28 @@
 @import url('https://fonts.googleapis.com/css?family=Droid+Serif');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css');
 
+body {
+	font-family: 'Droid Serif', serif;
+}
+
+.index-landing {
+	height: 400px;
+	width: 100%;
+	margin-top: -20px;
+	background-image: url('landing.png');
+	background-size: cover;
+	background-origin;
+	position: relative;
+}
+
+.message-container {
+	position: absolute;
+	right: 120px;
+	top: 40px;
+	font-size: 2em;
+	font-weight: bold;
+	text-shadow: 2px 2px 2px white;
+}
 
 .container-fluid {
 	padding-right: 0;
@@ -11,7 +34,7 @@
 }
 
 .navbar {
-	font-family: 'Droid Serif', serif;
+	
 	border-radius: 0;
 	min-height: 70px;
 }
@@ -72,4 +95,11 @@
 
 .navbar-items li:hover{
 	background: black;
+}
+
+.panel-heading {
+}
+
+.alert {
+	text-align: center;
 }
