@@ -12,12 +12,30 @@
 
 {% block body %}
 	<div class="container">
-		<div class="col-md-4">
+		<div class="col-md-4 col-md-offset-1">
 			<div class="panel panel-primary">
-				<div class="panel-heading">Instructions</div>
+				<div class="panel-heading">Log In Form</div>
 				<div class="panel-body">
-					<form action="#" method="post">
+					<form action="/login" method="post">
+						{% if error_login is defined %}
+							<div class="alert alert-danger"> <i class="glyphicon glyphicon-remove"></i> {{ error_login }} </div>
+						{% endif %}
+						<div class="form-group">
+							<label class="control-label" for="username">Username</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="glyphicon glyphicon-user"></i></div>
+								<input type="text" class="form-control" name="username" id="username" placeholder="Username">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="password">Password</label>
+							<div class="input-group">
+								<div class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></div>
+								<input type="password" class="form-control" name="password" id="password" placeholder="Password">
+							</div>
+						</div>
 
+						<input type="submit" value="Login" class="btn btn-default pull-right"> 
 					</form>
 				</div>
 			</div>
@@ -31,7 +49,7 @@
 						<div class="alert alert-danger"> <i class="glyphicon glyphicon-remove"></i> {{ error }} </div>
 					{% endif %}
 
-					<form action="#" method="post">
+					<form action="/signup" method="post">
 						<div class="{{ class_username|default('form-group')}}" >
 							<label class="control-label" for="username">Username</label>
 							<input 

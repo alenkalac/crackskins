@@ -8,10 +8,12 @@
 
 	class MainController {
 
-		static $ERROR_USERNAME 	= 1;
-		static $ERROR_EMAIL 	= 2;
-		static $ERROR_PASSWORD 	= 3;
-		static $ERROR_ROLLBACK  = 4;
+		private $ERROR_USERNAME 	= 1;
+		private $ERROR_EMAIL 	= 2;
+		private $ERROR_PASSWORD 	= 3;
+		private $ERROR_ROLLBACK  = 4;
+
+		private $LOGIN_ERROR_TEXT = "Incorrect Details, Try Again";
 
 		public function indexPage(Request $r, Application $app) {
 			return $app['twig']->render('index.html.twig', []);
@@ -19,6 +21,33 @@
 
 		public function signupPage(Request $r, Application $app) {
 			return $app['twig']->render('signup.html.twig', []);
+		}
+
+		public function loginProcess(Request $r, Application $app) {
+			$username = $r->get("username");
+			$password = $r->get("password");
+			$data = [];
+
+			$rexSafety = "/^([a-zA-Z0-9]){4,20}/";
+			if(!preg_match_all($rexSafety, $username) || !strlen($password) > 0) {
+				$data['error_login'] = $this->LOGIN_ERROR_TEXT;
+				return $app['twig']->render('signup.html.twig', $data);
+			}
+
+			$query = $app['db']->prepare("SELECT password,validated FROM users WHERE username = :USERNAME");
+			$query->execute([
+				":USERNAME" => $username,
+			]);
+
+			$result = $query->fetch(\PDO::FETCH_ASSOC);
+
+			if(password_verify($password, $result['password'])) {
+				die("good");
+			} 
+			else {
+				$data['error_login'] = "Incorrect Details, Try Again"; 
+				return $app['twig']->render('signup.html.twig', $data);
+			}
 		}
 
 		public function validateProcess(Request $r, Application $app) {
@@ -53,7 +82,6 @@
 					die("Oppps something went wrong ");
 				}
 			}
-
 			return new RedirectResponse("/");
 		}
 
@@ -74,20 +102,20 @@
 
 			//CHECK IF EMAIL IS VALID
 			if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-				$errorcode = $this::$ERROR_EMAIL;
+				$errorcode = $this->$ERROR_EMAIL;
 				$errormessage = 'Invalid Email Format';
 			}
 
 			//CHECK IF PASSWORDS MATCH
 			if(strcmp($password, $password2) !== 0) {
-				$errorcode = $this::$ERROR_PASSWORD;
+				$errorcode = $this->$ERROR_PASSWORD;
 				$errormessage = 'Passwords Dont Match!';
 			}
 
 			//CHECK IF USERNAME IS VALID
 			$rexSafety = "/^([a-zA-Z0-9]){4,20}/";
 			if(!preg_match_all($rexSafety, $username)) {
-				$errorcode = $this::$ERROR_USERNAME;
+				$errorcode = $this->$ERROR_USERNAME;
 				$errormessage = 'Invalid Username';
 			}
 
@@ -100,7 +128,7 @@
 
 				$result = $query->rowCount();
 				if($result) {
-					$errorcode = $this::$ERROR_USERNAME;
+					$errorcode = $this->$ERROR_USERNAME;
 					$errormessage = 'Username is not available';
 				}
 			}
@@ -114,7 +142,7 @@
 				$result = $query->rowCount();
 
 				if($result) {
-					$errorcode = $this::$ERROR_PASSWORD;
+					$errorcode = $this->$ERROR_PASSWORD;
 					$errormessage = 'Email already in use';
 				}
 			}
@@ -148,7 +176,7 @@
 				}
 				catch(PDOException $e) {
 					$app['db']->rollBack();
-					$data['errorcode'] = $this::$ERROR_ROLLBACK;
+					$data['errorcode'] = $this->$ERROR_ROLLBACK;
 					$data['error'] = "Something went wrong, Please try again";
 					return $app['twig']->render('signup.html.twig', $data);
 				}
@@ -156,5 +184,4 @@
 			}
 		}
 	}
-
 ?>

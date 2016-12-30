@@ -24,6 +24,42 @@ body {
 	text-shadow: 2px 2px 2px white;
 }
 
+.news {
+	font-size: 25px;
+}
+
+article {
+	
+}
+
+article .post img {
+	float: left;
+	margin: 15px;
+	margin-top: 0;
+	margin-left: 0;
+}
+
+article .post {
+
+}
+
+article .post a {
+	color: red;
+	font-weight: bold;
+
+}
+
+article .post .heading {
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+article .post .subheading {
+	color: gray;
+	font-size: 11px;
+}
+
 .container-fluid {
 	padding-right: 0;
 	padding-left: 0;
