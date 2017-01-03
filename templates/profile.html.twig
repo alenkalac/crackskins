@@ -1,0 +1,28 @@
+{% extends '_base.html.twig' %}
+
+{% block body %}
+	<div class="container-fluid">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Current Skin
+						</div>
+						<div class="panel-body">
+							<img class="img-responsive" src="/skin/render/{{ app.session.get('username') }}">
+						</div>
+					</div>
+					
+				</div>
+				<div class="col-sm-8">
+					<div class="col-sm-12 news">
+						<form action="/upload" method="POST">
+							<input type="text">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

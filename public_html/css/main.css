@@ -8,11 +8,11 @@ body {
 .index-landing {
 	height: 400px;
 	width: 100%;
-	margin-top: -20px;
 	background-image: url('landing.png');
 	background-size: cover;
 	background-origin;
 	position: relative;
+	margin-top: -20px;
 }
 
 .message-container {
@@ -69,10 +69,50 @@ article .post .subheading {
 	height: 70px;
 }
 
-.navbar {
+.submenu {
+	border-radius: 0;
+	min-height: auto;
+	height: auto;
+	margin-bottom: 20px;
+
 	
+}
+
+.greetings {
+	color: white;
+	display: inline-block;
+	height: 50px;
+	line-height: 50px;
+	font-size: 16px;
+}
+
+.sub-navbar-items {
+	display: block;
+	margin: 0;
+	padding-left: 15px;
+}
+
+.sub-navbar-items li {
+	display: inline-block;
+	float: right;
+}
+
+.sub-navbar-items li a {
+	padding: 15px 10px;
+	display: block;
+	color: gray;
+	transition: color 1s ease-in-out;
+	text-decoration: none;
+}
+
+.sub-navbar-items li a:hover {
+	color: white;
+}
+
+.navbar:not(.submenu) {
 	border-radius: 0;
 	min-height: 70px;
+	margin: 0;
 }
 
 .navbar-brand {

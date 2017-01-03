@@ -6,12 +6,14 @@
 	use Symfony\Component\HttpFoundation\Response;
 	use Symfony\Component\HttpFoundation\RedirectResponse;
 
+	require_once "skinrender.php";
+
 	class MainController {
 
 		private $ERROR_USERNAME 	= 1;
-		private $ERROR_EMAIL 	= 2;
+		private $ERROR_EMAIL 		= 2;
 		private $ERROR_PASSWORD 	= 3;
-		private $ERROR_ROLLBACK  = 4;
+		private $ERROR_ROLLBACK  	= 4;
 
 		private $LOGIN_ERROR_TEXT = "Incorrect Details, Try Again";
 
@@ -21,6 +23,19 @@
 
 		public function signupPage(Request $r, Application $app) {
 			return $app['twig']->render('signup.html.twig', []);
+		}
+
+		public function profilePage(Request $r, Application $app) {
+			if(!$this->isAuth($app)) 
+				return new RedirectResponse('/login');
+			
+			//get user details, post as whatever
+			return $app['twig']->render('profile.html.twig', []);
+		}
+
+		public function logoutProcess(Request $r, Application $app) {
+			$app['session']->clear();
+			return new RedirectResponse('/');
 		}
 
 		public function loginProcess(Request $r, Application $app) {
@@ -34,20 +49,23 @@
 				return $app['twig']->render('signup.html.twig', $data);
 			}
 
-			$query = $app['db']->prepare("SELECT password,validated FROM users WHERE username = :USERNAME");
+			$query = $app['db']->prepare("SELECT password,validated,username FROM users WHERE username = :USERNAME");
 			$query->execute([
-				":USERNAME" => $username,
+				"USERNAME" => $username,
 			]);
 
 			$result = $query->fetch(\PDO::FETCH_ASSOC);
 
-			if(password_verify($password, $result['password'])) {
-				die("good");
-			} 
-			else {
+			$user = $result['username'];
+
+			if(!password_verify($password, $result['password'])) {
 				$data['error_login'] = "Incorrect Details, Try Again"; 
 				return $app['twig']->render('signup.html.twig', $data);
 			}
+
+			$app['session']->set('login', true);
+			$app['session']->set('username', $user);
+			return new RedirectResponse('/');
 		}
 
 		public function validateProcess(Request $r, Application $app) {
@@ -56,8 +74,8 @@
 
 			$query = $app['db']->prepare("SELECT * FROM validate WHERE email = :EMAIL AND token = :TOKEN");
 			$query->execute([
-				":EMAIL" => $email,
-				":TOKEN" => $token,
+				"EMAIL" => $email,
+				"TOKEN" => $token,
 			]);
 
 			$rows = $query->rowCount();
@@ -65,19 +83,17 @@
 			if($rows === 1) {
 				$app['db']->beginTransaction();
 				try {
-
 					$query = $app['db']->prepare("UPDATE users SET validated = 1 WHERE email = :EMAIL");
 					$query->execute([
-						":EMAIL" => $email,
+						"EMAIL" => $email,
 					]);
 
 					$query = $app['db']->prepare("DELETE FROM validate WHERE email = :EMAIL");
 					$query->execute([
-						":EMAIL" => $email,
+						"EMAIL" => $email,
 					]);
 
 					$app['db']->commit();
-
 				}catch(PDOException $e) {
 					die("Oppps something went wrong ");
 				}
@@ -160,15 +176,15 @@
 				try {
 					$query = $app['db']->prepare("INSERT INTO users VALUES (NULL, :USERNAME, :PASSWORD, :EMAIL, 0)");
 					$query->execute([
-						":USERNAME" => $username,
-						":EMAIL" => $email,
-						":PASSWORD" => password_hash($password, PASSWORD_DEFAULT),
+						"USERNAME" => $username,
+						"EMAIL" => $email,
+						"PASSWORD" => password_hash($password, PASSWORD_DEFAULT),
 					]);
 
 					$query = $app['db']->prepare("INSERT INTO validate VALUES (NULL, :EMAIL, :TOKEN)");
 					$query->execute([
-						":EMAIL" => $email,
-						":TOKEN" => $token,
+						"EMAIL" => $email,
+						"TOKEN" => $token,
 					]);
 
 					$app['db']->commit();
@@ -182,6 +198,10 @@
 				}
 				return new RedirectResponse('/');
 			}
+		}
+
+		public function isAuth(Application $app) {
+			return ($app['session']->get('login', false));
 		}
 	}
 ?>

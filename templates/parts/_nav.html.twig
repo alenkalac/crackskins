@@ -5,9 +5,28 @@
 	 </div>
 	 <div class="col-sm-9  col-xs-12 full-height">
 	 	<ul class="navbar-items">
-	 		<li><a href="/login">Login</a>
+	 		{% if app.session.get('login') == true %}
+	 			<li><a href="/logout">Logout</a>
+	 		{% else %}
+	 			<li><a href="/login">Login</a>
+	 		{% endif %}
+	 		
 	        <li><a href="#">Instructions</a></li>
 	        <li><a href="#">Download</a></li>
+       </ul>
+	 </div>
+</nav>
+<nav class="navbar navbar-inverse submenu">
+	 <div class="col-xs-12">
+	 	<ul class="sub-navbar-items">
+	 		{% if app.session.get('login') == true %}
+	        <li><a href="/profile">Profile</a></li>
+	        {% endif %}
+	        <li><a href="#">Browse Skins</a></li>
+
+	        {% if app.session.get('login') == true %}
+	        	<span class="greetings">Welcome {{ app.session.get('username') }}</span>
+	        {% endif %}
        </ul>
 	 </div>
 </nav>
