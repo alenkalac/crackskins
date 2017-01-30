@@ -9,6 +9,7 @@
 	$app->get('/profile', "Alen\MainController::profilePage");
 	$app->get('/skin/{username}', "Alen\SkinController::getSkin");
 	$app->get('/skin/render/{skinid}', "Alen\SkinController::getSkinRender");
+	$app->get('/browse', "Alen\MainController::browsePage");
 
 	$app->post("/login", "Alen\MainController::loginProcess");
 	$app->post('/signup', "Alen\MainController::signupProcess");

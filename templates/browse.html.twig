@@ -1,0 +1,61 @@
+{% extends '_base.html.twig' %}
+
+{% block body %}
+	<div class="container-fluid">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Browse Skins
+						</div>
+						<div class="panel-body">
+							{% for skin in skins %}
+								<div class="col-sm-2 history-item">
+									<img 	class="img-responsive history-change" 
+											src="/skins/rendered/{{ skin.skin }}.png" >
+									<div class="overlay">
+										<button class="btn btn-primary btn-change" id="{{ skin.skin }}" >Set Default</button>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="changeSkinModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+    		<form enctype="multipart/form-data" action="/skinchange" method="POST" class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title ">Skin Change Dialog</h4>
+     			</div>
+      		<div class="modal-body">
+      			<label for="id">Choose Your Skin to upload</label>
+        		<input type="file" name="skin" id="skin" required>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-default btn-history-change" data-dismiss="modal">Close</button>
+        		<button type="submit" class="btn btn-primary">Save changes</button>
+      		</div>
+    	</form><!-- /.modal-content -->
+  	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+	$(document).ready(function(){
+		$('.btn-change').click(function(){
+			window.location.replace("/skinchange/" + this.id);
+		})
+
+		$('.btn-delete').click(function(){
+			window.location.replace("/skinchange/delete/" + this.id);
+		})
+	});
+</script>
+
+
+{% endblock %}

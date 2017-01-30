@@ -10,12 +10,13 @@
 
 	class SkinController {
 
-		function validateLogin(Application $app) {
+		function invalidateLogin(Application $app) {
 
 			if($app['session']->get('login', false) === false)
-				return new RedirectResponse("/login");
+				return true;
 			if($app['session']->get('username') == null)
-				return new RedirectResponse("/login");
+				return true;
+			return false;
 		}
 
 		function getSkinRender(Request $r, Application $app) {
@@ -28,7 +29,8 @@
 		}
 
 		function deleteSkinProcess(Request $r, Application $app) {
-			$this->validateLogin($app);
+			if($this->invalidateLogin($app))
+				return new RedirectResponse("/login");
 
 			$skinid = $r->get('skinid');
 			$username = $app['session']->get('username');
@@ -45,7 +47,8 @@
 		}
 
 		function changeSkinProcess2(Request $r, Application $app) {
-			$this->validateLogin($app);
+			if($this->invalidateLogin($app))
+				return new RedirectResponse("/login");
 
 			$skinid = $r->get('skinid');
 
@@ -64,7 +67,8 @@
 		}
 
 		function changeSkinProcess(Request $r, Application $app) {
-			$this->validateLogin($app);
+			if($this->invalidateLogin($app))
+				return new RedirectResponse("/login");
 
 			$file = $r->files->get('skin');
 			$filetype_whitelist[] = 'image/png';

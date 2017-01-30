@@ -22,7 +22,7 @@
 	 		{% if app.session.get('login') == true %}
 	        <li><a href="/profile">Profile</a></li>
 	        {% endif %}
-	        <li><a href="#">Browse Skins</a></li>
+	        <li><a href="/browse">Browse Skins</a></li>
 
 	        {% if app.session.get('login') == true %}
 	        	<span class="greetings">Welcome {{ app.session.get('username') }}</span>

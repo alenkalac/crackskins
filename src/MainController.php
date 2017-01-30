@@ -25,6 +25,13 @@
 			return $app['twig']->render('signup.html.twig', []);
 		}
 
+		public function browsePage(Request $r, Application $app) {
+			$query = $app['db']->prepare("SELECT DISTINCT skin FROM skins");
+			$query->execute();
+			$skins = $query->fetchAll(\PDO::FETCH_ASSOC);
+			return $app['twig']->render('browse.html.twig', ['skins' => $skins]);
+		}
+
 		public function profilePage(Request $r, Application $app) {
 			if(!$this->isAuth($app)) 
 				return new RedirectResponse('/login');
