@@ -24,13 +24,16 @@
 						</div>
 						<div class="panel-body">
 							{% for his in history %}
-								<div class="col-sm-4">
+								<div class="col-sm-4 history-item">
 									<img 
 										class="img-responsive history-change" 
 										src="/skins/rendered/{{ his.skin }}.png" 
 										id="{{ his.skin }}">
+										<!--<button class="btn btn-primary btn-change">Set Default</button>
+										<button class="btn btn-danger btn-delete">X</button>-->
 									<div class="overlay">
-										<button class="btn btn-primary">Set Default</button>
+										<button class="btn btn-primary btn-change" id="{{ his.skin }}" >Set Default</button>
+										<button class="btn btn-danger btn-delete" id="{{ his.skin }}" >X</button>
 									</div>
 								</div>
 							{% endfor %}
@@ -54,7 +57,7 @@
         		<input type="file" name="skin" id="skin" required>
       		</div>
       		<div class="modal-footer">
-        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        		<button type="button" class="btn btn-default btn-history-change" data-dismiss="modal">Close</button>
         		<button type="submit" class="btn btn-primary">Save changes</button>
       		</div>
     	</form><!-- /.modal-content -->
@@ -63,8 +66,12 @@
 
 <script>
 	$(document).ready(function(){
-		$('.history-change').click(function(){
+		$('.btn-change').click(function(){
 			window.location.replace("/skinchange/" + this.id);
+		})
+
+		$('.btn-delete').click(function(){
+			window.location.replace("/skinchange/delete/" + this.id);
 		})
 	});
 </script>
