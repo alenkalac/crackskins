@@ -15,5 +15,6 @@
 
 
 	$app->get('/skinchange/{skinid}', "Alen\SkinController::changeSkinProcess2");
+	$app->get('/skinchange/delete/{skinid}', "Alen\SkinController::deleteSkinProcess");
 	$app->post('/skinchange', "Alen\SkinController::changeSkinProcess");
 ?>

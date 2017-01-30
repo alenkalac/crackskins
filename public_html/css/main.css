@@ -85,14 +85,29 @@ article .post .subheading {
 
 .history-change {
 	cursor: pointer;
+	
 }
 
-.history-change:hover {
+.history-item {
+	
+}
+
+.history-item:hover > img {
 	transform: scale(1.05);
 }
 
-.history-change:hover  + .overlay {
+.history-item:hover .overlay {
 	opacity: 1;
+}
+
+.btn-delete {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.btn-change {
+
 }
 
 .overlay {
@@ -107,8 +122,9 @@ article .post .subheading {
 	top: 0;
 	left: 0;
 	opacity: 0;
-	pointer-events: none;
 	transition: 0.2s opacity ease-in-out;
+	z-index: 999;
+
 }
 
 .greetings {
