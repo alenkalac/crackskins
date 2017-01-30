@@ -6,7 +6,7 @@
 	use Symfony\Component\HttpFoundation\Response;
 	use Symfony\Component\HttpFoundation\RedirectResponse;
 
-	require_once "skinrender.php";
+	//require_once "/SkinRender.php";
 
 	class MainController {
 
@@ -28,9 +28,16 @@
 		public function profilePage(Request $r, Application $app) {
 			if(!$this->isAuth($app)) 
 				return new RedirectResponse('/login');
-			
+
+			$query = $app['db']->prepare("SELECT skin FROM skins WHERE user LIKE BINARY :USERNAME");
+			$query->execute([
+				"USERNAME" => $app['session']->get('username'),
+			]);
+
+			$history = $query->fetchAll(\PDO::FETCH_ASSOC);
+
 			//get user details, post as whatever
-			return $app['twig']->render('profile.html.twig', []);
+			return $app['twig']->render('profile.html.twig', ['history' => $history]);
 		}
 
 		public function logoutProcess(Request $r, Application $app) {
@@ -43,29 +50,39 @@
 			$password = $r->get("password");
 			$data = [];
 
-			$rexSafety = "/^([a-zA-Z0-9]){4,20}/";
+			$rexSafety = "/^([a-zA-Z0-9]){2,20}/";
 			if(!preg_match_all($rexSafety, $username) || !strlen($password) > 0) {
 				$data['error_login'] = $this->LOGIN_ERROR_TEXT;
 				return $app['twig']->render('signup.html.twig', $data);
 			}
 
-			$query = $app['db']->prepare("SELECT password,validated,username FROM users WHERE username = :USERNAME");
+			$query = $app['db']->prepare("SELECT password,validated,username FROM users WHERE username LIKE BINARY :USERNAME");
 			$query->execute([
 				"USERNAME" => $username,
 			]);
 
 			$result = $query->fetch(\PDO::FETCH_ASSOC);
-
 			$user = $result['username'];
+
 
 			if(!password_verify($password, $result['password'])) {
 				$data['error_login'] = "Incorrect Details, Try Again"; 
 				return $app['twig']->render('signup.html.twig', $data);
 			}
 
+			$query = $app['db']->prepare("SELECT skin FROM skins WHERE user LIKE BINARY :USERNAME AND active = 1");
+			$query->execute([
+				"USERNAME" => $username,
+			]);
+
+			$result = $query->fetch(\PDO::FETCH_ASSOC);
+			$skin = $result['skin'];
+
 			$app['session']->set('login', true);
 			$app['session']->set('username', $user);
-			return new RedirectResponse('/');
+			$app['session']->set('skin', $skin);
+
+			return new RedirectResponse('/profile');
 		}
 
 		public function validateProcess(Request $r, Application $app) {
@@ -118,20 +135,20 @@
 
 			//CHECK IF EMAIL IS VALID
 			if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-				$errorcode = $this->$ERROR_EMAIL;
+				$errorcode = $this->ERROR_EMAIL;
 				$errormessage = 'Invalid Email Format';
 			}
 
 			//CHECK IF PASSWORDS MATCH
 			if(strcmp($password, $password2) !== 0) {
-				$errorcode = $this->$ERROR_PASSWORD;
+				$errorcode = $this->ERROR_PASSWORD;
 				$errormessage = 'Passwords Dont Match!';
 			}
 
 			//CHECK IF USERNAME IS VALID
-			$rexSafety = "/^([a-zA-Z0-9]){4,20}/";
+			$rexSafety = "/^([a-zA-Z0-9]){2,20}/";
 			if(!preg_match_all($rexSafety, $username)) {
-				$errorcode = $this->$ERROR_USERNAME;
+				$errorcode = $this->ERROR_USERNAME;
 				$errormessage = 'Invalid Username';
 			}
 
@@ -144,7 +161,7 @@
 
 				$result = $query->rowCount();
 				if($result) {
-					$errorcode = $this->$ERROR_USERNAME;
+					$errorcode = $this->ERROR_USERNAME;
 					$errormessage = 'Username is not available';
 				}
 			}
@@ -158,11 +175,10 @@
 				$result = $query->rowCount();
 
 				if($result) {
-					$errorcode = $this->$ERROR_PASSWORD;
+					$errorcode = $this->ERROR_PASSWORD;
 					$errormessage = 'Email already in use';
 				}
 			}
-
 			//FINISH
 			if($errorcode > 0) {
 				$data['errorcode'] = $errorcode;
@@ -174,7 +190,7 @@
 				$app['db']->beginTransaction();
 
 				try {
-					$query = $app['db']->prepare("INSERT INTO users VALUES (NULL, :USERNAME, :PASSWORD, :EMAIL, 0)");
+					$query = $app['db']->prepare("INSERT INTO users VALUES (NULL, :USERNAME, :PASSWORD, :EMAIL, 1)");
 					$query->execute([
 						"USERNAME" => $username,
 						"EMAIL" => $email,
@@ -188,11 +204,18 @@
 					]);
 
 					$app['db']->commit();
-					die("validate "  . "<a href='localhost:8080/validate/$email/$token'>Validate</a>");
+
+					//implement email functionality.
+
+					$app['session']->set('login', true);
+					$app['session']->set('username', $username);
+					$app['session']->set('skin', '');
+
+					return new RedirectResponse('/profile');
 				}
 				catch(PDOException $e) {
 					$app['db']->rollBack();
-					$data['errorcode'] = $this->$ERROR_ROLLBACK;
+					$data['errorcode'] = $this->ERROR_ROLLBACK;
 					$data['error'] = "Something went wrong, Please try again";
 					return $app['twig']->render('signup.html.twig', $data);
 				}

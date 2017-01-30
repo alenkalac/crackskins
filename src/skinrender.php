@@ -12,8 +12,13 @@ Class SkinRender
 {
 	public $size =  400;
 	
-	function __construct($user) {
-		$skin = "skins/$user.png";
+	function __construct($skin_id) {
+		$skin = "skins/steve.png";
+
+		if($skin != '' || $skin == 0) 
+			$skin = "skins/$skin_id.png";
+		if(!file_exists($skin)) 
+			$skin = "skins/steve.png";
 
 		$g = 4;
 		$p = ($this->size / 100) * 5;
@@ -191,13 +196,17 @@ Class SkinRender
 		    imagedestroy($mi);
 		}
 
+		
+		header('Pragma: public');
+		header('Cache-Control: max-age=86400');
+		header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
 		header('Content-type: image/png');
-		imagepng($av);
+		imagepng($av, "skins/rendered/$skin_id.png");
 		imagedestroy($im);
 		imagedestroy($av);
 	}
 
-	function get_skin($user)
+	function get_skin($skin)
 	{
 	    // Default Steve Skin: http://assets.mojang.com/SkinTemplates/steve.png
 	    $output = 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAFDUlEQVR42u2a20sUURzH97G0LKMotPuWbVpslj1olJ';
@@ -222,9 +231,8 @@ Class SkinRender
 	    $output .= '9od++pvX8fdMAcj3/QJ9iJsAFPQCxHSnQt8vMJ3v2wCYpkhkAOR7vG7q4aCXoMoSgG8hFAuc/grMdAD4B/kHl9da7';
 	    $output .= 'Ne9AAAAAElFTkSuQmCC';
 	    $output = base64_decode($output);
-	    if ($user != '') {
-	    	if(file_exists("skins/Ansome.png"))
-	    	var_dump(imagecreatefrompng("skins/Ansome.png"));
+	    if ($skin != '') {
+	    	$output = imagecreatefrompng("skins/$skin.png");
 	    }
 	    return $output;
 	}

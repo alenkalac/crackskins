@@ -9,20 +9,65 @@
 						<div class="panel-heading">
 							Current Skin
 						</div>
-						<div class="panel-body">
-							<img class="img-responsive" src="/skin/render/{{ app.session.get('username') }}">
+						<div class="panel-body current-skin">
+							<img class="img-responsive" src="/skin/render/{{ app.session.get('skin')|default('0') }}">
+							<button class="btn btn-default pull-right" data-toggle="modal" data-target="#changeSkinModal">Change Skin</button>
 						</div>
 					</div>
 					
 				</div>
-				<div class="col-sm-8">
-					<div class="col-sm-12 news">
-						<form action="/upload" method="POST">
-							<input type="text">
-						</form>
+				<div class="col-sm-8 row">
+					<div class="col-sm-12">
+						<div class="panel panel-default">
+						<div class="panel-heading">
+							Skin History
+						</div>
+						<div class="panel-body">
+							{% for his in history %}
+								<div class="col-sm-4">
+									<img 
+										class="img-responsive history-change" 
+										src="/skins/rendered/{{ his.skin }}.png" 
+										id="{{ his.skin }}">
+									<div class="overlay">
+										<button class="btn btn-primary">Set Default</button>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="changeSkinModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+    		<form enctype="multipart/form-data" action="/skinchange" method="POST" class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title ">Skin Change Dialog</h4>
+     			</div>
+      		<div class="modal-body">
+      			<label for="id">Choose Your Skin to upload</label>
+        		<input type="file" name="skin" id="skin" required>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        		<button type="submit" class="btn btn-primary">Save changes</button>
+      		</div>
+    	</form><!-- /.modal-content -->
+  	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+	$(document).ready(function(){
+		$('.history-change').click(function(){
+			window.location.replace("/skinchange/" + this.id);
+		})
+	});
+</script>
+
+
 {% endblock %}

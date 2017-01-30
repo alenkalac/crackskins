@@ -8,8 +8,12 @@
 	$app->get('/logout', "Alen\MainController::logoutProcess");
 	$app->get('/profile', "Alen\MainController::profilePage");
 	$app->get('/skin/{username}', "Alen\SkinController::getSkin");
-	$app->get('/skin/render/{username}', "Alen\SkinController::getSkinRender");
+	$app->get('/skin/render/{skinid}', "Alen\SkinController::getSkinRender");
 
 	$app->post("/login", "Alen\MainController::loginProcess");
 	$app->post('/signup', "Alen\MainController::signupProcess");
+
+
+	$app->get('/skinchange/{skinid}', "Alen\SkinController::changeSkinProcess2");
+	$app->post('/skinchange', "Alen\SkinController::changeSkinProcess");
 ?>
